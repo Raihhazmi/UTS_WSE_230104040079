@@ -169,19 +169,25 @@ Folder `/evidence/P8/` berisi: - Screenshot hasil uji API\
 - `README_P8.md`\
 - Project lengkap **P7_Hardening_230104040079**
 
-## 📝 Bukti pengerjaan
-| Aksi                         | Gambar                                                                 |
-|------------------------------|------------------------------------------------------------------------|
-| 🟢 GET — Ambil semua produk  | ![GET All]() |
-| 🟢 GET — Ambil produk by ID  | ![GET by ID]() |
-| 🔴 GET — Ambil produk by ID (404) | ![GET by ID]() |
-| 🟡 POST — Tambah produk baru | ![POST]() |
-| 🔴 POST — Tambah produk baru (400) | ![POST]() |
-| 🔵 PUT — Update full produk  | ![PUT]() |
-| 🟣 PATCH — Update sebagian produk | ![PATCH]() |
-| 🔴 DELETE — Hapus produk     | ![DELETE]() |
-| ⚙️ GET — Cek status API      | ![HEALTH]() |
- 
+## 9 📝 Bukti pengerjaan
+| Aksi                                     | Gambar |
+|------------------------------------------|--------|
+| 🟢 GET — Ambil semua movies              | ![GET All](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/GET%20API%20MOVIES.png) |
+| 🟢 GET — Ambil movies by ID              | ![GET by ID 200](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/GET%20API%20MOVIES%20BY%20ID%20(200).png) |
+| 🔴 GET — Ambil movies by ID (404)        | ![GET by ID 404](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/GET%20API%20MOVIES%20BY%20ID%20(404).png) |
+| 🟡 POST — Tambah movies baru (201)       | ![POST 201](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/POST%20TAMBAH%20DATA%20BARU%20(201).png) |
+| 🔴 POST — Tambah movies baru (400)       | ![POST 400](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/POST%20TAMBAH%20DATA%20BARU%20(400).png) |
+| 🔵 PUT — Update movies by ID (200)       | ![PUT 200](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/PUT%20UBAH%20DATA%20BY%20ID%20(200).png) |
+| 🔴 PUT — Update movies by ID (400)       | ![PUT 400](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/PUT%20UBAH%20DATA%20BY%20ID%20(400).png) |
+| 🔴 PUT — Update movies by ID (404)       | ![PUT 404](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/PUT%20UBAH%20DATA%20BY%20ID%20(404).png) |
+| 🔴 DELETE — Hapus movies by ID (204)     | ![DELETE 204](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/DEL%20HAPUS%20DATA%20BY%20ID%20(204).png) |
+| 🔴 DELETE — Hapus movies by ID (404)     | ![DELETE 404](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/DEL%20HAPUS%20DATA%20BY%20ID%20(404).png) |
+| ⚙️ GET — API Info                        | ![GET INFO](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/GET%20API%20INFO.png) |
+| ⚙️ GET — Health Check                    | ![HEALTH](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/GET%20UJI%20HEALTH%20END%20POINT.png) |
+| 🔐 LIMITTER — Cegah spam request (429)   | ![429](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/API%20MOVIES%20LIMITTER%20(429).png) |
+| 🔴 Global 404 Handler                    | ![404 Handler](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/GET%20GLOBAL%20404%20HANDLER.png) |
+| 🔥 Global Error Handler (500)            | ![500 Handler](https://github.com/Raihhazmi/UTS_WSE_230104040079/blob/main/ScreenShots/global%20eror%20handler%20500.png) |
+
 ## 📎 10. Catatan Tambahan
 
 -   Gunakan resource **movies** dari project UTS.\
