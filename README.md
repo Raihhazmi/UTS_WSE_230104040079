@@ -1,231 +1,188 @@
-# 📘 UTS Web Service Engineering - RESTful API (Articles Resource)
+# 🛡️ Praktikum 7 --- RESTful API Hardening & Observability
 
-Proyek ini merupakan implementasi **RESTful API** menggunakan **Node.js** dan **Express.js** sebagai pemenuhan tugas **Ujian Tengah Semester (UTS)** mata kuliah *Web Service Engineering*.  
-API ini mengelola resource **Articles**, sesuai dengan digit terakhir NIM mahasiswa (9).
+### Mata Kuliah: **Web Service Engineering (20251)**
 
----
+Repositori: **P7_Hardening_230104040079**
 
-## 👤 Identitas Mahasiswa
-| Keterangan | Detail |
-|-------------|---------|
-| **Nama** | Muhammad Raihan Azmi |
-| **NIM** | 230104040079 |
-| **Kelas** | TI23B |
-| **Resource** | `articles` (Digit akhir NIM: 9) |
+## 📌 1. Deskripsi Praktikum
 
----
+Praktikum ini berfokus pada peningkatan kualitas dan keamanan API hasil
+UTS dengan menambahkan fitur **API Hardening** serta **Observability**
+(logging & monitoring).\
+Tujuan utama adalah membuat API menjadi:
 
-## 📝 Deskripsi Proyek
-API ini menyediakan operasi **CRUD (Create, Read, Update, Delete)** lengkap untuk data artikel.  
-Proyek dibangun **tanpa database eksternal** (menggunakan *in-memory data array* sebagai simulasi penyimpanan), serta menerapkan **7 Prinsip RESTful API**:
+-   Lebih **aman**
+-   Lebih **stabil**
+-   Mudah **dipantau** dan **di-debug**
 
-1. **Resource-Oriented URI** — menggunakan URI yang jelas untuk resource (`/api/articles`)
-2. **Proper HTTP Methods** — menggunakan GET, POST, PUT, DELETE sesuai fungsinya
-3. **Stateless Communication** — setiap permintaan bersifat independen
-4. **Consistent Status Codes** — menggunakan kode status HTTP yang tepat (200, 201, 204, 400, 404)
-5. **JSON Representation** — komunikasi data menggunakan format JSON
-6. **Validation & Error Handling** — validasi input dan penanganan error yang baik
-7. **Discoverability** — menyediakan endpoint `/api/info` sebagai metadata layanan
+Fitur yang diimplementasikan:
 
----
+-   🔐 **Security Middleware**: Helmet, CORS, Rate Limit\
+-   ⚙️ **Environment Variable**: dotenv\
+-   📄 **Request Logging**: Morgan\
+-   ❗ **Global Error Handler** yang konsisten\
+-   ❤️ **Health & Metrics Endpoint** (/api/health)
 
-## 🧰 Teknologi yang Digunakan
-- [Node.js](https://nodejs.org/) — Runtime environment  
-- [Express.js](https://expressjs.com/) — Web framework  
-- [Nodemon](https://nodemon.io/) — Development tool untuk auto-restart server  
+## 🎯 2. Learning Outcomes
 
----
+1.  Menerapkan middleware keamanan (Helmet, CORS, Rate Limit).
+2.  Mengelola environment configuration menggunakan **.env**.
+3.  Mengimplementasikan logging API menggunakan **Morgan**.
+4.  Membuat Global Error Handler reusable.
+5.  Membuat endpoint observability `/api/health`.
+6.  Memahami dasar observability dalam Web Service Engineering.
 
-## ⚙️ Cara Instalasi dan Menjalankan
+## 📂 3. Prasyarat
 
-Pastikan **Node.js** telah terinstal di komputer Anda.
+-   Praktikum 5\
+-   Praktikum 6\
+-   UTS\
+    Project pada praktikum ini merupakan lanjutan dari **project UTS**.
 
-1. **Clone** atau **extract** repository ini ke komputer lokal.  
-2. Buka terminal dan arahkan ke direktori proyek.  
-3. Jalankan perintah berikut untuk menginstal dependensi:
-   ```bash
-   npm install
-   ```
-4. Jalankan server dalam mode development:
-   ```bash
-   npm run dev
-   ```
-5. Server akan berjalan pada:
-   ```
-   http://localhost:3000
-   ```
+## ⚙️ 4. Setup Project
 
----
+1.  Buat folder project baru:
 
-## 📚 Dokumentasi API
+        P7_Hardening_230104040079/
 
-**Base URL:** `http://localhost:3000/api`
+2.  Pindahkan project hasil UTS ke dalam folder tersebut.
 
-### 1. Service Info
-**Endpoint:** `GET /info`  
-**Deskripsi:** Menampilkan informasi tentang layanan API.  
+3.  Install dependency berikut:
 
-**Response (200 OK):**
-```json
-{
-  "status": "success",
-  "message": "API Service for UTS Web Service Engineering",
-  "author": "Muhammad Raihan Azmi",
-  "nim": "230104040079"
-}
+    ``` bash
+    npm install helmet cors express-rate-limit dotenv morgan
+    ```
+
+4.  Buat file `.env`:
+
+        PORT=3000
+        RATE_LIMIT=100
+        NODE_ENV=development
+
+5.  Buat file `.env.example` dengan struktur variabel yang sama.
+
+## 🔐 5. Implementasi Security & Observability
+
+### A. Security Middleware
+
+``` js
+const helmet = require('helmet');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+
+app.use(helmet());
+app.use(cors({ origin: 'http://localhost:5173' }));
 ```
 
----
+**Rate Limiter:**
 
-### 2. Get All Articles
-**Endpoint:** `GET /articles`  
-**Deskripsi:** Mengambil semua data artikel.  
+``` js
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: process.env.RATE_LIMIT,
+  message: { status: "fail", message: "Terlalu banyak request." }
+});
 
-**Response (200 OK):**
-```json
-{
-  "status": "success",
-  "data": [
-    { "id": 1, "title": "Understanding RESTful APIs", "author": "John Doe", "year": 2024 },
-    { "id": 2, "title": "Node.js for Beginners", "author": "Jane Doe", "year": 2023 }
-  ]
-}
+app.use(limiter);
 ```
 
----
+### B. Logging (Morgan)
 
-### 3. Get Article by ID
-**Endpoint:** `GET /articles/:id`  
-**Example:** `/api/articles/1`  
-
-**Response (200 OK):**
-```json
-{
-  "status": "success",
-  "data": { "id": 1, "title": "Understanding RESTful APIs", "author": "John Doe", "year": 2024 }
-}
+``` js
+const morgan = require('morgan');
+app.use(morgan('combined'));
 ```
 
-**Error (404 Not Found):**
-```json
-{
-  "status": "error",
-  "message": "Artikel tidak ditemukan"
-}
+### C. Global Error Handler
+
+**File:** `src/middlewares/errorHandler.js`
+
+``` js
+module.exports = (err, req, res, next) => {
+  console.error(err.stack);
+
+  res.status(err.status || 500).json({
+    status: "error",
+    message: err.message || "Internal Server Error",
+  });
+};
 ```
 
----
+Tambahkan ke `app.js`:
 
-### 4. Create New Article
-**Endpoint:** `POST /articles`  
-**Deskripsi:** Menambahkan artikel baru.  
-**Body (JSON):**
-```json
-{
-  "title": "Modern Web Development",
-  "author": "Alex Smith",
-  "year": 2025
-}
+``` js
+const errorHandler = require('./middlewares/errorHandler');
+app.use(errorHandler);
 ```
 
-**Response (201 Created):**
-```json
-{
-  "status": "success",
-  "message": "Artikel berhasil dibuat",
-  "data": { "id": 3, "title": "Modern Web Development", "author": "Alex Smith", "year": 2025 }
-}
+### D. Health Endpoint
+
+``` js
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString(),
+  });
+});
 ```
 
-**Error (400 Bad Request):**
-```json
-{
-  "status": "error",
-  "message": "Field title dan author wajib diisi"
-}
-```
+## 🗂️ 6. Struktur Folder Project
 
----
+    src/
+    ├── app.js
+    ├── routes/
+    │   └── movies.routes.js
+    ├── controllers/
+    │   └── movies.controller.js
+    ├── middlewares/
+    │   ├── errorHandler.js
+    │   ├── logger.js
+    │   └── limiter.js
+    ├── utils/
+    │   └── env.js
+    ├── data/
+    │   └── movies.data.js
+    ├── logs/
+    │   └── access.log
+    └── .env
 
-### 5. Update Article
-**Endpoint:** `PUT /articles/:id`  
-**Deskripsi:** Memperbarui artikel berdasarkan ID.  
-**Example:** `/api/articles/2`  
-**Body (JSON):**
-```json
-{
-  "title": "Node.js Advanced Concepts",
-  "author": "Jane Doe",
-  "year": 2024
-}
-```
+## 🧪 7. Pengujian API
 
-**Response (200 OK):**
-```json
-{
-  "status": "success",
-  "message": "Artikel berhasil diperbarui",
-  "data": { "id": 2, "title": "Node.js Advanced Concepts", "author": "Jane Doe", "year": 2024 }
-}
-```
+| Method | Endpoint            | Deskripsi                               | Autentikasi | Status Code      | Keterangan                               |
+|--------|----------------------|-------------------------------------------|-------------|------------------|-------------------------------------------|
+| GET    | /api/<resource>      | Mendapatkan semua data resource           | Tidak       | 200              | Resource berasal dari project UTS         |
+| GET    | /api/<resource>/:id  | Mendapatkan data berdasarkan ID           | Tidak       | 200 / 404        | 404 jika ID tidak ditemukan               |
+| POST   | /api/<resource>      | Menambah data baru                        | Tidak       | 201 / 400        | Validasi input wajib                      |
+| PUT    | /api/<resource>/:id  | Mengubah data berdasarkan ID              | Tidak       | 200 / 400 / 404  | Konsisten dengan RESTful principles       |
+| DELETE | /api/<resource>/:id  | Menghapus data berdasarkan ID             | Tidak       | 204 / 404        | Response kosong jika berhasil             |
+| GET    | /api/info            | Menampilkan informasi service             | Tidak       | 200              | Metadata API & identitas                  |
+| GET    | /api/health          | Mengecek status API                       | Tidak       | 200              | Monitoring uptime & environment           |
+| ANY    | endpoint tidak dikenal | Handler 404 global                     | Tidak       | 404              | Ditangani oleh middleware                 |
+| ERROR  | internal server error | Global Error Handler                    | Tidak       | 500              | Response error JSON                       |
 
-**Error (400 / 404):**
-```json
-{
-  "status": "error",
-  "message": "Artikel tidak ditemukan atau data tidak valid"
-}
-```
 
----
+## 📤 8. Output Praktikum
 
-### 6. Delete Article
-**Endpoint:** `DELETE /articles/:id`  
-**Deskripsi:** Menghapus artikel berdasarkan ID.  
-**Example:** `/api/articles/3`
+Folder `/evidence/P8/` berisi: - Screenshot hasil uji API\
+- File `.env` dan `.env.example`\
+- `README_P8.md`\
+- Project lengkap **P7_Hardening_230104040079**
 
-**Response (204 No Content):**  
-*(Tidak ada body response)*
+## 📝 Bukti pengerjaan
+| Aksi                         | Gambar                                                                 |
+|------------------------------|------------------------------------------------------------------------|
+| 🟢 GET — Ambil semua produk  | ![GET All]() |
+| 🟢 GET — Ambil produk by ID  | ![GET by ID]() |
+| 🔴 GET — Ambil produk by ID (404) | ![GET by ID]() |
+| 🟡 POST — Tambah produk baru | ![POST]() |
+| 🔴 POST — Tambah produk baru (400) | ![POST]() |
+| 🔵 PUT — Update full produk  | ![PUT]() |
+| 🟣 PATCH — Update sebagian produk | ![PATCH]() |
+| 🔴 DELETE — Hapus produk     | ![DELETE]() |
+| ⚙️ GET — Cek status API      | ![HEALTH]() |
+ 
+## 📎 10. Catatan Tambahan
 
-**Error (404 Not Found):**
-```json
-{
-  "status": "error",
-  "message": "Artikel tidak ditemukan"
-}
-```
-
----
-
-## 📂 Struktur Proyek
-```
-UTS_WSE_230104040079/
-├── src/
-│   ├── app.js                    # File utama server
-│   ├── data/
-│   │   └── articles.data.js      # Data dummy artikel
-│   ├── controllers/
-│   │   └── articles.controller.js # Logika untuk setiap endpoint
-│   └── routes/
-│       └── articles.routes.js    # Definisi semua rute API
-├── package.json
-└── README.md
-```
-
----
-
-## 🔗 Daftar Endpoint
-
-| Method | Endpoint             | Deskripsi               | Status          |
-|--------|-----------------------|--------------------------|-----------------|
-| GET    | `/api/articles`       | Ambil semua artikel      | 200             |
-| GET    | `/api/articles/:id`   | Ambil artikel by ID      | 200 / 404       |
-| POST   | `/api/articles`       | Tambah artikel baru      | 201 / 400       |
-| PUT    | `/api/articles/:id`   | Update full artikel      | 200 / 400 / 404 |
-| DELETE | `/api/articles/:id`   | Hapus artikel            | 204 / 404       |
-| GET    | `/api/info`           | Cek status API           | 200             |
-
----
-
-## 💡 Catatan
-Proyek ini dibuat untuk memenuhi tugas **UTS Web Service Engineering** dan dapat dijadikan dasar pengembangan layanan API lebih lanjut dengan integrasi ke database seperti **MongoDB** atau **PostgreSQL**.
+-   Gunakan resource **movies** dari project UTS.\
+-   Pastikan seluruh struktur project mengikuti arsitektur modular.
