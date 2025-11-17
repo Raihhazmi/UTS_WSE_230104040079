@@ -1,3 +1,4 @@
+// code masih waras
 // src/controllers/movies.controller.js
 
 let movies = require('../data/movies.data.js');
